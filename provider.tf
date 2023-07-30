@@ -1,9 +1,8 @@
 terraform {
-  required_version = "1.4.0"
+  required_version = ">= 1.4.0"
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      #  Lock version to prevent unexpected problems
       version = "4.5"
   }
 }
@@ -19,3 +18,6 @@ region = var.region
 shared_credentials_files = ["~/.aws/credentials"]
 profile = var.profile
 }
+
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}

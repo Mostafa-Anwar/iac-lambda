@@ -1,5 +1,13 @@
-data "aws_lambda_function" "lambda_name" {
-    function_name = aws_lambda_function.this.function_name    
+data "aws_lambda_function" "alpha" {
+    function_name = aws_lambda_function.alpha.function_name    
+}
+
+data "aws_lambda_function" "beta" {
+    function_name = aws_lambda_function.beta.function_name    
+}
+
+data "aws_lambda_function" "gamma" {
+    function_name = aws_lambda_function.gamma.function_name    
 }
 
 resource "aws_cloudwatch_metric_alarm" "lambda_error_alarm" {
@@ -53,17 +61,17 @@ resource "aws_cloudwatch_dashboard" "lambda_dashboard" {
         type        = "metric"
         x           = 0
         y           = 0
-        width       = 12
+        width       = 6
         height      = 6
         properties = {
           view         = "timeSeries"
           stacked      = false
           metrics      = [
             [ "AWS/Lambda", "Invocations", "FunctionName", data.aws_lambda_function.lambda_name.function_name ],
-            [ "AWS/Lambda", "Errors", "FunctionName", data.aws_lambda_function.lambda_name.function_name ]
           ]
           region       = "us-east-2"
-          title        = "Lambda Invocations and Errors"
+          liveData     = true
+          title        = "Lambda Invocations"
           yAxis        = {
             left  = {
               min   = 0
@@ -76,18 +84,19 @@ resource "aws_cloudwatch_dashboard" "lambda_dashboard" {
       },
       {
         type        = "metric"
-        x           = 0
-        y           = 6
-        width       = 12
-        height      = 6
+        x           = 6
+        y           = 0
+        width       = 8
+        height      = 8
         properties = {
           view         = "timeSeries"
           stacked      = false
           metrics      = [
-            [ "AWS/Lambda", "Duration", "FunctionName", data.aws_lambda_function.lambda_name.function_name ]
+            [ "AWS/Lambda", "Errors", "FunctionName", data.aws_lambda_function.lambda_name.function_name ]
           ]
-          region       = "us-east-1"
-          title        = "Lambda Duration"
+          region       = "us-east-2"
+          liveData     = true
+          title        = "Lambda Errors"
           yAxis        = {
             left  = {
               min   = 0
@@ -96,6 +105,23 @@ resource "aws_cloudwatch_dashboard" "lambda_dashboard" {
               min   = 0
             }
           }
+        }
+      },
+      {
+        type        = "metric"
+        x           = 18
+        y           = 0
+        width       = 6
+        height      = 3
+        properties = {
+          view         = "timeSeries"
+          stacked      = false
+          metrics      = [
+            [ "AWS/Lambda", "Duration", "FunctionName", data.aws_lambda_function.lambda_name.function_name ]
+          ]
+          region       = "us-east-2"
+          liveData     = true
+          title        = "Lambda Duration"
         }
       }
     ]

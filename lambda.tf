@@ -132,7 +132,7 @@ resource "aws_lambda_function" "beta" {
 
 resource "aws_lambda_function" "gamma" {
   function_name = "gamma"
-  handler       = "notify.lambda_handler"
+  handler       = "dash.lambda_handler"
   runtime       = "python3.9"
   role          = aws_iam_role.lambda_role.arn
   filename      = "dash.zip"
